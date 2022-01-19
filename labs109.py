@@ -48,4 +48,70 @@ def ryerson_letter_grade(pct):
     elif 0 <= pct <= 49:
         return 'F'
 
+# 16 seconds
+# def is_ascending(items):
+#     flag = 'True'
+#     if items == [] or len(items) == 1:
+#         return 'True'
+#     else:
+#         for count, value in enumerate(items):
+#             if count == 0:
+#                 continue
+#             elif value > items[count-1]:
+#                 continue
+#             elif value <= items[count-1]:
+#                 flag = 'False'
+#                 break
+#     return flag
 
+# 15.4 seconds
+# def is_ascending(items):
+#     # Flag any empty lists or lists with 1 item
+#     if items == [] or len(items) == 1:
+#         return 'True'
+#     # Flag any lists with duplicates
+#     elif len(items) != len(set(items)):
+#         return 'False'
+#     # Flag any lists that aren't ascendign
+#     else:
+#         flag = 'True'
+#         for count, value in enumerate(items):
+#             if count == 0:
+#                 continue
+#             elif items[count-1] - value > 0:
+#                 flag = 'False'
+#                 break
+#         return flag
+
+# 15.2 seconds
+def is_ascending(items):
+    # Flag any empty lists or lists with 1 item
+    if items == [] or len(items) == 1:
+        return 'True'
+    # Flag any lists with duplicates
+    elif len(items) != len(set(items)):
+        return 'False'
+    # Flag any lists that aren't ascendign
+    else:
+        flag = 'True'
+        for count in range(len(items)-1):
+            if items[count+1] - items[count] < 0:
+                flag = 'False'
+                break
+        return flag
+
+def riffle(items, out=True):
+    if items == []:
+        return []
+    elif out == True:
+        rifl = []
+        for count in range(len(items)//2):
+            rifl.append(items[count])
+            rifl.append(items[count-len(items)//2])
+        return rifl
+    elif out == False:
+        rifl = []
+        for count in range(len(items)//2):
+            rifl.append(items[count-len(items)//2])
+            rifl.append(items[count])
+        return rifl
