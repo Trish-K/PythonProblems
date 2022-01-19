@@ -87,16 +87,16 @@ def ryerson_letter_grade(pct):
 def is_ascending(items):
     # Flag any empty lists or lists with 1 item
     if items == [] or len(items) == 1:
-        return 'True'
+        return True
     # Flag any lists with duplicates
     elif len(items) != len(set(items)):
-        return 'False'
+        return False
     # Flag any lists that aren't ascendign
     else:
-        flag = 'True'
+        flag = True
         for count in range(len(items)-1):
             if items[count+1] - items[count] < 0:
-                flag = 'False'
+                flag = False
                 break
         return flag
 
@@ -115,3 +115,26 @@ def riffle(items, out=True):
             rifl.append(items[count-len(items)//2])
             rifl.append(items[count])
         return rifl
+
+def only_odd_digits(n):
+    if n%2 == 0:
+        return False
+    else:
+        flag = True
+        for digit in str(n):
+            if int(digit)%2 == 0:
+                flag = False
+                break
+        return flag
+
+def is_cyclops(n):
+    if n == 0:
+        return True
+    elif len(str(n))%2 == 0:
+        return False
+    elif str(n).count('0') > 1:
+        return False
+    elif str(n)[(len(str(n))-1)//2] == '0':
+        return True
+    else:
+        return False
