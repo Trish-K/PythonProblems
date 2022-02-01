@@ -75,3 +75,29 @@ def domino_cycle(tiles):
         return False
     return True
   return False
+
+def colour_trio(colours):
+    from math import factorial
+    n = len(colours) - 1
+    
+    coeffs = []
+    for i in range(n+1):
+        coeffs.append(factorial(n)//(factorial(i)*factorial(n-i)))
+       
+    colours = list(colours)
+    colour_dict = {'r':1,
+                   'y':0,
+                   'b':2}
+    colour_dict2 = {1:'r',
+                   0:'y',
+                   2:'b'}
+    for letter in colours:
+        colours[colours.index(letter)] = colour_dict[letter]
+
+    result = [a*b for a,b in zip(colours,coeffs)]
+    
+    if len(colours) % 2 == 0:
+        final = -sum(result)%3
+        return colour_dict2[final]
+    final = sum(result)%3
+    return colour_dict2[final]
