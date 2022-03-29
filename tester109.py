@@ -32,7 +32,7 @@ verbose_execution = {
 use_expected_answers = True
 
 # The release date of this version of the tester.
-version = "January 12, 2022"
+version = "March 23, 2022"
 
 # Fixed seed used to generate pseudorandom numbers.
 fixed_seed = 12345
@@ -343,6 +343,35 @@ def pyramid(n=1, goal=5, inc=1):
 
 # The test case generators for the individual functions.
 
+def recaman_item_generator():
+    yield from range(1, 4)
+    yield from islice(scale_random(1234, 5, 10), 70)
+
+
+def verify_betweenness_generator(seed):
+    rng = random.Random(seed)
+    for n in islice(pyramid(3, 3, 2), 2000):
+        perm = [i for i in range(n)]
+        rng.shuffle(perm)
+        m = rng.randint(1, n-1)
+        constraints = set()
+        while len(constraints) < m:
+            idx = sorted(rng.sample(range(n), 3))
+            if rng.randint(0, 99) < 50:
+                constraints.add((perm[idx[0]], perm[idx[1]], perm[idx[2]]))
+            else:
+                constraints.add((perm[idx[2]], perm[idx[1]], perm[idx[0]]))
+        constraints = list(constraints)
+        if rng.randint(0, 99) < 50:
+            ci = rng.randint(0, m-1)
+            con = constraints[ci]
+            if rng.randint(0, 99) < 50:
+                constraints[ci] = (con[1], con[0], con[2])
+            else:
+                constraints[ci] = (con[0], con[2], con[1])
+        yield (perm, constraints)
+
+
 def stepping_stones_generator(seed):
     rng = random.Random(seed)
     for n in islice(pyramid(5, 5, 5), 50):
@@ -568,13 +597,13 @@ def safe_squares_generator(seed):
     yield 3, [(0, 1), (0, 2)]
     # On to fuzzing...
     rng = random.Random(seed)
-    for i in range(3000):
+    for i in range(1000):
         n = rng.randint(2, 3 + i // 50)
         pn = rng.randint(0, n + 2)
         pieces = set()
         while len(pieces) < pn:
-            px = rng.randint(0, n - 1)
-            py = rng.randint(0, n - 1)
+            px = rng.randint(0, n-1)
+            py = rng.randint(0, n-1)
             if (px, py) not in pieces:
                 pieces.add((px, py))
         yield n, list(pieces)
@@ -681,7 +710,7 @@ def possible_words_generator(seed):
         words = [x.strip() for x in f]
     rng = random.Random(seed)
     n = 0
-    while n < 80:
+    while n < 40:
         pat_word = rng.choice(words)
         letters = sorted(set(c for c in pat_word))
         if len(letters) > 3:
@@ -742,11 +771,6 @@ def collapse_intervals_generator(seed):
             else:
                 curr += 1
         yield items
-
-
-def recaman_item_generator():
-    yield from range(1, 4)
-    yield from islice(scale_random(1234, 5, 10), 70)
 
 
 def __no_repeated_digits(n, allowed):
@@ -887,7 +911,7 @@ def is_perfect_power_generator(seed):
 
 def sort_by_digit_count_generator(seed):
     rng = random.Random(seed)
-    for n in islice(pyramid(1, 3, 1), 2000):
+    for n in islice(pyramid(1, 3, 1), 1000):
         items = []
         for _ in range(n):
             d = rng.randint(1, n + 3)
@@ -1052,7 +1076,7 @@ def three_summers_generator(seed):
     rng = random.Random(seed)
     count, goal = 0, 1
     items = []
-    for i in range(400):
+    for i in range(200):
         count += 1
         if count == goal:
             count, goal = 0, goal + 5
@@ -1361,22 +1385,11 @@ def substitution_words_generator():
         yield pattern, words
 
 
-def forbidden_substrings_generator():
-    yield 'ABCDE', 5, ['A', 'B', 'C', 'D']
-    yield 'ABCD', 3, ['AA', 'BB', 'CC']
-    yield 'FG', 4, ['FGG', 'GFF', 'FFF']
-    yield 'PQR', 2, ['PP', 'QR']
-    yield 'XABCD', 2, []
-    yield 'REB', 6, ['RR', 'EE', 'BE', 'BRR']
-    yield 'MOS', 5, ['SO', 'SM', 'SS']
-    yield 'ABCDEFG', 100, ['B', 'C', 'D', 'E', 'F', 'G']
-
-
 def count_dominators_generator(seed):
     rng = random.Random(seed)
     items = []
     count, goal = 0, 10
-    for _ in range(100000):
+    for _ in range(20000):
         yield items[:]
         count += 1
         if count == goal:
@@ -1507,7 +1520,7 @@ def arithmetic_progression_generator(seed):
 
 def cookie_generator(seed):
     rng = random.Random(seed)
-    for i in range(40):
+    for i in range(25):
         items = [rng.randint(1, 2 + i)]
         for j in range(3 + i // 7):
             items.append(items[-1] + rng.randint(1, 2 + i))
@@ -1521,7 +1534,7 @@ def eliminate_neighbours_generator(seed):
     rng = random.Random(seed)
     count, goal = 0, 1
     items, m = [1, 2, 3, 4, 5, 6, 7], 7
-    for i in range(10000):
+    for i in range(5000):
         yield items[:]
         count += 1
         if count == goal:
@@ -1749,7 +1762,7 @@ def trips_fill_generator(seed):
     rng = random.Random(seed)
     with open('words_sorted.txt', encoding='UTF-8') as f:
         words3 = [word.strip() for word in f if len(word) == 4]
-    for i in range(200):
+    for i in range(130):
         n, pat, c = 3 + i // 20, '', 0
         for _ in range(n):
             if rng.randint(0, 99) < 100 - 15 * (c + 2):
@@ -2026,7 +2039,7 @@ testcases = [
     (
      "count_dominators",
      count_dominators_generator(fixed_seed),
-     "459d463b7699203fa1f38496b4ba9fe4f78136ea4dc90573c7"
+     "59c803dd281b9230f6dab608d6d35b600b55cf11a084bff11f477970ea2b9fe6"
     ),
     # Removed from problem set December 9, 2021
     # (
@@ -2221,7 +2234,7 @@ testcases = [
     (
      "three_summers",
      three_summers_generator(fixed_seed),
-     "af87ad9e569ed4f7e71379d06ce3a0c0b2cef7cc43f344ef2a"
+     "07b0fa22fe8a9668072557471c92f363855f10744fb7b0b9b00971b55ced579c"
     ),
     # Removed from problem set April 20, 2020
     # (
@@ -2274,17 +2287,17 @@ testcases = [
     (
      "rooks_with_friends",
      rooks_with_friends_generator(fixed_seed),
-     "305091a0a222bf14dba5c4a4883454d4e842363dcd0e696405"
+     "5c2156612b95bda73b221fdd1ca77773f6e01108b9c48ba40437e56328b9db04"
     ),
     (
      "safe_squares_rooks",
      safe_squares_generator(fixed_seed),
-     "5fcf5ca643f2678c51e510f5bfd1d6a7f12c180374d2f58ccb"
+     "9e06a8a2766ab41420ded02e2e2ad4fc8b03138ab38992d530296431ac8d30b5"
     ),
     (
      "safe_squares_bishops",
      safe_squares_generator(fixed_seed),
-     "bc783d16964b872f62bf4a2b56b76f80c6f86c047746e87b80"
+     "71e6e56c9f044b66871de3b232bdafb2af5ffba99319d8fdc60de94f5e8735ee"
     ),
     # Removed from problem set April 20, 2020
     # (
@@ -2360,7 +2373,7 @@ testcases = [
     (
      "sort_by_digit_count",
      sort_by_digit_count_generator(fixed_seed),
-     "fffc0299e12fc6fc074dfcab73b8384603ed4a7ad516346f8c6e8ab53633e6ad"
+     "6015a1e6aee7d3fb5f49e780a3dd935c9ffb70d7d082e75f070b714c43b7e8d8"
     ),
     (
      "is_perfect_power",
@@ -2538,7 +2551,7 @@ testcases = [
     (
      "possible_words",
      possible_words_generator(fixed_seed),
-     "89861067154b1b84d61ecbed94bb0a709aa54346c0eddd136b8340e91f13b1bb"
+     "9c618411b596d47d5ee1b462e7dfdb24ba77eb90bed90011f8b2c7eb0ac0b18f"
     ),
 
     # New additions to the problem set in 2020.
@@ -2546,12 +2559,12 @@ testcases = [
     (
      "cookie",
      cookie_generator(fixed_seed),
-     "a04728a718656fc5367a62a61494e5a3497a64b0c3f61b7d1f"
+     "e805e6415e06998231e26f5b5949ffae9f06782a5397573c8b6ff6c6358ccf61"
     ),
     (
      "eliminate_neighbours",
      eliminate_neighbours_generator(fixed_seed),
-     "1a2aead65abcb5d7f53813c2f7ae1aee7e7ce34b3c1cf810b8b091bffe2c27d7"
+     "2c03ea722ed7776cd2608f14f4493d0445b0bf8d86f2546aacf575ca2f29df7d"
     ),
     (
      "counting_series",
@@ -2620,7 +2633,7 @@ testcases = [
     (
      "subtract_square",
      subtract_square_generator(fixed_seed),
-     "8959f61972a8804d0b26e2ae92d30d4d3fb6f08f1bcf5e28b9"
+     "8959f61972a8804d0b26e2ae92d30d4d3fb6f08f1bcf5e28b9e3e91aedc81410"
     ),
     # Removed from problem set December 9, 2021
     # (
@@ -2662,7 +2675,7 @@ testcases = [
     (
      "trips_fill",
      trips_fill_generator(fixed_seed),
-     "c3a71cefae41fc0a49ad32ef656c68535617ad67ee4743efac"
+     "de71d54a6b5ef0aafca5fb50a6db63afb7a8744f434cc2f2a32cc2c274e8a037"
     ),
     (
      "is_left_handed",
@@ -2737,6 +2750,7 @@ testcases = [
      wordomino_generator(),
      "5b081cc381ec8ddaa382d8450def04b53255ee62b67356f690"
     ),
+    # Kept in the tester for the duration of Winter 2022 term, will be removed right after.
     (
      "recaman_item",
      recaman_item_generator(),
@@ -2784,6 +2798,11 @@ testcases = [
      "stepping_stones",
      stepping_stones_generator(fixed_seed),
      "0c569431eff15dfa6b5d320aff761843352f76ae4acf4f37906435855c8536ec"
+    ),
+    (
+     "verify_betweenness",
+     verify_betweenness_generator(fixed_seed),
+     "16b9176a15ffd0a8da7cbd5a125627fa68b6eca4ad01523515b95b0c8092f342"
     )
 ]
 
