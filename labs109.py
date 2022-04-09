@@ -130,6 +130,23 @@ def brussels_choice_step(n, mink, maxk):
     ans.sort()
     return ans
 
+def bulgarian_solitaire(piles, k):
+    
+    moves = 0
+    test = piles[:]
+    test.sort()
+
+    if test == list(range(1,k+1)):
+        return moves
+    
+    while test != list(range(1,k+1)):
+        temp_len = len(test)
+        test = [x-1 for x in test if x-1 > 0] 
+        test += [temp_len]
+        test.sort()
+        moves += 1
+     
+    return moves
 def count_carries(a, b):
     max_len = max([str(a),str(b)],key=len)
     count = 0
