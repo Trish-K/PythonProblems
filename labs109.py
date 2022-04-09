@@ -130,16 +130,6 @@ def brussels_choice_step(n, mink, maxk):
     ans.sort()
     return ans
 
-def bulgarian_solitaire(piles, k):
-    moves = 0
-    
-    while sorted(piles) != sorted(range(1,k+1)):
-        piles.append(len(piles)+1)
-        piles = [i-1 for i in piles if i-1 != 0]  
-        moves += 1
-
-    return moves
-
 def count_carries(a, b):
     max_len = max([str(a),str(b)],key=len)
     count = 0
@@ -867,59 +857,6 @@ def safe_squares_rooks(n, rooks):
     num_ones = sum([sum(i) for i in mat])
     num_zeros = n*n - num_ones
     return num_zeros
-def scylla_or_charybdis(moves, n):
-    # we know k = 1 will always work 
-    fall = n-1
-    move_dict = {
-        '-' : -1,
-        '+' : 1
-    }
-    
-    move_nums = [move_dict[i] for i in moves]
-
-    k = 2
-    key_k = 1
-    ind = k - 1
-    pos = []
-    pos2 = []
-    
-    num = move_nums[0]
-    for i,val in enumerate(move_nums[1:]):
-        if abs(num + val) > fall:
-            pos = move_nums[:i+2]
-            break
-        else:
-            num += val
-    
-    while k <= (len(move_nums))//2:
-        
-        pos2 = move_nums[ind::k]
-        num = pos2[0]
-        
-        for i,val in enumerate(pos2[1:]):
-            if abs(num + val) > fall:
-                pos2 = pos2[:i+2]
-                break
-            else:
-                num += val
-                
-#         print(f'pos = {pos} and pos2 = {pos2} and k = {k} and key_k = {key_k}')
-        
-        if abs(sum(pos2)) > fall and len(pos2) < len(pos):
-            pos = pos2
-            key_k = k
-            
-        k += 1
-        ind = k - 1
-        pos2 = []
-        
-    return key_k
-
-
-
-
-
-
 def seven_zero(n):
     if n%2 != 0 and n%5 !=0:
         for d in range(1,n+1):   
@@ -982,29 +919,24 @@ def oware_move(board, house):
     return board
 
 def words_with_letters(words, letters):
-    with open(words,'r') as file:
-        lines = [line.rstrip() for line in file]
-        ans = []
-
-        for word in lines: #[41174:41175]: #[41176:41178]: #[37893:37900]:  
+    ans = []
+    for word in words: #[41174:41175]: #[41176:41178]: #[37893:37900]:  
 #             print(word)
-            if letters[0] in word:
-                ind = word.index(letters[0])
-                flag = True
-                for i in letters[1:]:
+        if letters[0] in word:
+            ind = word.index(letters[0])
+            flag = True
+            for i in letters[1:]:
 #                     print(f'check for letter {i} at index {ind} and on')
 #                     print(word[ind:])
-                    if i in word[ind+1:] and ind < (word[ind+1:].index(i) + ind + 1):
-                        ind = ind + word[ind+1:].index(i) + 1
-                    else:
-                        flag = False
-                        break
-                if flag == True:
-                    ans.append(word)
+                if i in word[ind+1:] and ind < (word[ind+1:].index(i) + ind + 1):
+                    ind = ind + word[ind+1:].index(i) + 1
+                else:
+                    flag = False
+                    break
+            if flag == True:
+                ans.append(word)
 
-        return ans
-
-
+    return ans    
 def sum_of_two_squares(n):
     i = 1
     j = int(n**(1/2))
