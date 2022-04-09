@@ -1182,3 +1182,151 @@ def calkin_wilf(n):
 
      
     return prev.popleft()
+
+def conjugate_regular(verb, subject, tense):
+    ar_dict = {
+        'yo' : 'o',
+        'tú' : 'as',
+        'él' : 'a',
+        'ella' : 'a', 
+        'usted' : 'a',
+        'nosotros' : 'amos',
+        'nosotras' : 'amos',
+        'vosotros' : 'áis',
+        'vosotras' : 'áis',
+        'ellos' : 'an',
+        'ellas' : 'an',
+        'ustedes' : 'an'
+    }
+    
+    er_dict = {
+        'yo' : 'o',
+        'tú' : 'es',
+        'él' : 'e',
+        'ella' : 'e', 
+        'usted' : 'e',
+        'nosotros' : 'emos',
+        'nosotras' : 'emos',
+        'vosotros' : 'éis',
+        'vosotras' : 'éis',
+        'ellos' : 'en',
+        'ellas' : 'en',
+        'ustedes' : 'en'
+    }
+    
+    ir_dict = {
+        'yo' : 'o',
+        'tú' : 'es',
+        'él' : 'e',
+        'ella' : 'e', 
+        'usted' : 'e',
+        'nosotros' : 'imos',
+        'nosotras' : 'imos',
+        'vosotros' : 'ís',
+        'vosotras' : 'ís',
+        'ellos' : 'en',
+        'ellas' : 'en',
+        'ustedes' : 'en'
+    }
+    
+    ar_pret = {
+        'yo' : 'é',
+        'tú' : 'aste',
+        'él' : 'ó',
+        'ella' : 'ó', 
+        'usted' : 'ó',
+        'nosotros' : 'amos',
+        'nosotras' : 'amos',
+        'vosotros' : 'asteis',
+        'vosotras' : 'asteis',
+        'ellos' : 'aron',
+        'ellas' : 'aron',
+        'ustedes' : 'aron'
+    }
+
+    er_ir_pret = {
+        'yo' : 'í',
+        'tú' : 'iste',
+        'él' : 'ió',
+        'ella' : 'ió', 
+        'usted' : 'ió',
+        'nosotros' : 'imos',
+        'nosotras' : 'imos',
+        'vosotros' : 'isteis',
+        'vosotras' : 'isteis',
+        'ellos' : 'ieron',
+        'ellas' : 'ieron',
+        'ustedes' : 'ieron'
+    }
+    
+    ar_imp = {
+        'yo' : 'aba',
+        'tú' : 'abas',
+        'él' : 'aba',
+        'ella' : 'aba', 
+        'usted' : 'aba',
+        'nosotros' : 'ábamos',
+        'nosotras' : 'ábamos',
+        'vosotros' : 'abais',
+        'vosotras' : 'abais',
+        'ellos' : 'aban',
+        'ellas' : 'aban',
+        'ustedes' : 'aban'
+    }
+    
+    er_ir_imp = {
+        'yo' : 'ía',
+        'tú' : 'ías',
+        'él' : 'ía',
+        'ella' : 'ía', 
+        'usted' : 'ía',
+        'nosotros' : 'íamos',
+        'nosotras' : 'íamos',
+        'vosotros' : 'íais',
+        'vosotras' : 'íais',
+        'ellos' : 'ían',
+        'ellas' : 'ían',
+        'ustedes' : 'ían'
+    }
+    
+    fut_dict = {
+        'yo' : 'é',
+        'tú' : 'ás',
+        'él' : 'á',
+        'ella' : 'á', 
+        'usted' : 'á',
+        'nosotros' : 'emos',
+        'nosotras' : 'emos',
+        'vosotros' : 'éis',
+        'vosotras' : 'éis',
+        'ellos' : 'án',
+        'ellas' : 'án',
+        'ustedes' : 'án'
+    }
+    
+    ending = verb[-2:]
+
+    if tense == 'presente':
+        if ending == 'ar':
+            return verb[:-2] + ar_dict[subject]
+        elif ending == 'er':
+            return verb[:-2] + er_dict[subject]
+        elif ending == 'ir':
+            return verb[:-2] + ir_dict[subject]
+        
+    elif tense == 'pretérito':
+        if ending == 'ar':
+            return verb[:-2] + ar_pret[subject]
+        elif ending == 'er' or ending == 'ir':
+            return verb[:-2] + er_ir_pret[subject]
+    
+    elif tense == 'imperfecto':
+        if ending == 'ar':
+            return verb[:-2] + ar_imp[subject]
+        elif ending == 'er' or ending == 'ir':
+            return verb[:-2] + er_ir_imp[subject]
+        
+    elif tense == 'futuro':
+        return verb + fut_dict[subject]
+    
+    return ''
