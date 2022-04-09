@@ -1154,3 +1154,31 @@ def words_with_given_shape(words, shape):
                 
 
     return ans
+
+def calkin_wilf(n):
+    from fractions import Fraction
+    from collections import deque
+    
+    count = 1
+    
+    prev = deque([Fraction(1,1)])
+    left = None
+    right = None
+
+
+    end_point = n
+    
+    while count < end_point:
+        consider = prev.popleft()
+#         print(f'the current fraction to consider is {consider}')
+        left = Fraction(consider.numerator, (consider.numerator + consider.denominator))
+        right = Fraction((consider.numerator + consider.denominator), consider.denominator)
+#         print(left)
+#         print(right)
+        prev.append(left)
+        prev.append(right)
+        
+        count += 1
+
+     
+    return prev.popleft()
