@@ -1124,3 +1124,35 @@ def ztalloc(shape):
         elif move == 'u' and start%2 != 0:
             return None
     return step[-1]
+
+def brangelina(first, second):
+    vowels = 'aeiou'
+    count_vowels = []
+    prev = False
+    count = 0
+    for i,letter in enumerate(first):
+        if letter in vowels and prev == False:
+            count_vowels.append(i)
+            prev = True
+            count += 1
+        elif letter in vowels and prev == True:
+            continue
+        else:
+            prev = False
+    beg = ''
+    if len(count_vowels) == 1:
+        beg = first[:count_vowels[0]]
+        if second[0] in vowels:
+            return beg + second
+        else:
+            for i,letter in enumerate(second):
+                if letter in vowels:
+                    return beg + second[i:]
+    elif len(count_vowels) > 1:
+        beg = first[:count_vowels[-2]]
+        if second[0] in vowels:
+            return beg + second
+        else:
+            for i,letter in enumerate(second):
+                if letter in vowels:
+                    return beg + second[i:]
