@@ -1105,3 +1105,22 @@ def postfix_evaluate(items):
                 ans = eval(str(lst[-2])+ i + str(lst[-1]))
                 lst = lst[:-2] + [ans]
     return lst[0]
+
+def ztalloc(shape):
+    if 'uu' in shape:
+        return None
+    start = 1
+    step = [start]   
+    for move in shape[::-1]:
+        if move == 'd':
+            start = start * 2
+            step.append(start)
+        elif move == 'u' and start%2 == 0:
+            if (start - 1)/3 == (start - 1)//3:
+                start = (start - 1)//3
+                step.append(start)
+            else:
+                return None
+        elif move == 'u' and start%2 != 0:
+            return None
+    return step[-1]
