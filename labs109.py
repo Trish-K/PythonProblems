@@ -1156,3 +1156,9 @@ def brangelina(first, second):
             for i,letter in enumerate(second):
                 if letter in vowels:
                     return beg + second[i:]
+                
+def count_divisibles_in_range(start, end, n):
+    count = end//n - start//n
+    if start%n == 0:
+        return count + 1
+    return end//n - start//n
