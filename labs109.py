@@ -1162,3 +1162,71 @@ def count_divisibles_in_range(start, end, n):
     if start%n == 0:
         return count + 1
     return end//n - start//n
+
+def bridge_hand_shape(hand):
+    hand_dict = {
+        'spades' : 0,
+        'hearts' : 0,
+        'diamonds' : 0,
+        'clubs' : 0
+    }
+    for card in hand:
+        hand_dict[card[1]] += 1    
+    return [hand_dict['spades'], hand_dict['hearts'], hand_dict['diamonds'], hand_dict['clubs']]
+
+def milton_work_point_count(hand, trump='notrump'):
+    card_dict = {
+        'spades' : 0,
+        'hearts' : 0,
+        'diamonds' : 0,
+        'clubs' : 0} 
+    num_dict = {
+        'one' : [],
+        'two' : [],
+        'three' : [],
+        'four' : [],
+        'five' : [],
+        'six' : [],
+        'seven' : [],
+        'eight' : [],
+        'nine' : [],
+        'ten' : [],
+        'jack' : [],
+        'queen' : [],
+        'king' : [],
+        'ace' : []}
+    points = 0
+    
+    for card in hand:
+        card_dict[card[1]] += 1
+        if num_dict[card[0]] == []:
+            num_dict[card[0]] = [card[1]]
+        else:
+            num_dict[card[0]] = num_dict[card[0]] + [card[1]]
+            
+        if card[0] == 'ace':
+            points += 4
+        elif card[0] == 'king':
+            points += 3
+        elif card[0] == 'queen':
+            points += 2     
+        elif card[0] == 'jack':
+            points += 1
+    card_counts = [card_dict['spades'], card_dict['hearts'], card_dict['diamonds'], card_dict['clubs']]
+    card_counts.sort()
+    if card_counts == [3,3,3,4]:
+        points -= 1        
+    for key in card_dict.keys():
+        if card_dict[key] == 5:
+            points += 1
+        elif card_dict[key] == 6:
+            points += 2
+        elif card_dict[key] >= 7:
+            points += 3       
+    if trump != 'notrump':
+        for key in card_dict.keys():
+            if card_dict[key] == 0 and key != trump:
+                points += 5
+            elif card_dict[key] == 1 and key != trump:
+                points += 3    
+    return points
