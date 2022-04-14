@@ -1,3 +1,25 @@
+# As an example, here is an implementation of
+# the first problem "Ryerson Letter Grade":
+
+def ryerson_letter_grade(n):
+    if n < 50:
+        return 'F'
+    elif n > 89:
+        return 'A+'
+    elif n > 84:
+        return 'A'
+    elif n > 79:
+        return 'A-'
+    tens = n // 10
+    ones = n % 10
+    if ones < 3:
+        adjust = "-"
+    elif ones > 6:
+        adjust = "+"
+    else:
+        adjust = ""
+    return "DCB"[tens - 5] + adjust
+
 def group_and_skip(n, out, ins):
     rem_coins = []
     while n > 0:
@@ -1230,3 +1252,67 @@ def milton_work_point_count(hand, trump='notrump'):
             elif card_dict[key] == 1 and key != trump:
                 points += 3    
     return points
+
+def bridge_hand_shorthand(hand):
+    ans = ''
+    card_dict = {
+        'ace' : 'A',
+        'king' : 'K',
+        'queen' : 'Q',
+        'jack' : 'J'}
+    hand_dictx = {
+        'spades' : '',
+        'hearts' : '',
+        'diamonds' : '',
+        'clubs' : ''}
+    hand_dict = {
+        'spades' : 'iiii',
+        'hearts' : 'iiii',
+        'diamonds' : 'iiii',
+        'clubs' : 'iiii'}
+    places_dict = {
+        'A' : 0,
+        'K' : 1,
+        'Q' : 2,
+        'J' : 3,}
+    for card in hand:   
+        if card[0] not in card_dict.keys():
+            hand_dictx[card[1]] += 'x'
+        elif card[0] in card_dict.keys():
+            temp = list(hand_dict[card[1]])
+            temp[places_dict[card_dict[card[0]]]] = card_dict[card[0]]
+            hand_dict[card[1]] = ''.join(temp) 
+    for key in hand_dict.keys():
+        hand_dict[key] = hand_dict[key].replace('i','')
+        hand_dict[key] += hand_dictx[key]    
+    for key in hand_dict.keys():
+        if hand_dict[key] == '':
+            ans += '- '
+            continue
+        ans += hand_dict[key] + ' '
+    return ans.rstrip()
+
+def frequency_sort(items):
+    freq_dict = {}  
+    for i in items:
+        if i not in freq_dict.keys():
+            freq_dict[i] = 1
+        else:
+            freq_dict[i] += 1 
+    freq_dict = sorted(freq_dict.items(), key = lambda i:(-i[1],i[0]))
+    freq_dict = dict(freq_dict)
+    ans = []
+    for key in freq_dict.keys():
+        ans += [key for x in range(freq_dict[key])]
+    return ans
+
+def possible_words(words, pattern):
+    len_word = len(pattern)
+    let_dict = {}
+    for count,i in enumerate(pattern):
+        if i.isalpha() == True:
+            let_dict[count] = i
+    ans = []
+    sub_list = list(filter(lambda i : len(i)==len_word,words))
+    ans = [wrd for wrd in sub_list if all(wrd[i] == let_dict[i] and wrd.count(let_dict[i]) == ''.join(let_dict.values()).count(let_dict[i]) for i in let_dict.keys())]
+    return ans
